@@ -1,0 +1,23 @@
+options:
+  docker: true
+
+image: maven:3.3.9
+pipelines:
+  default:
+    - step:
+        name: Clean
+        script:
+          - mvn -B clean # -B batch mode makes Maven less verbose
+    - step:
+        name: Package
+        script:
+          - mvn -B install # -B batch mode makes Maven less verbose
+          - ls -R
+        artifacts:
+          - target/**
+    - step:
+        name: Docker build
+        script:
+          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - docker build -t $IMAGE_NAME .
+          - docker push $IMAGE_NAME
