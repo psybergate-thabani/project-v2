@@ -1,5 +1,6 @@
 package com.psybergate.resoma.projectv2.service;
 
+import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.projectv2.entity.Allocation;
 import com.psybergate.resoma.projectv2.entity.Project;
 import com.psybergate.resoma.projectv2.entity.ProjectType;
@@ -14,8 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.ValidationException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,12 +29,14 @@ class ProjectServiceTest {
 
     @Mock
     private ProjectRepository projectRepository;
+    @Mock
+    private PeopleApi peopleApi;
     private ProjectService projectService;
     private Project project;
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository);
+        projectService = new ProjectServiceImpl(projectRepository, peopleApi);
         project = new Project("proj1", "First Project", "client1", LocalDate.now(), null, ProjectType.BILLABLE);
     }
 
@@ -279,6 +284,7 @@ class ProjectServiceTest {
         project.setId(UUID.randomUUID());
         when(projectRepository.getOne(project.getId())).thenReturn(project);
         when(projectRepository.save(project)).thenReturn(project);
+        when(peopleApi.validateEmployee(allocation.getEmployeeId(), null)).thenReturn(true);
 
         //Act
         Allocation resultAllocation = projectService.allocateEmployee(project.getId(), allocation);

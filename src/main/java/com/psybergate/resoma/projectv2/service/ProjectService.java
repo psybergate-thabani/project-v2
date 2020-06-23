@@ -38,5 +38,5 @@ public interface ProjectService {
 
     Set<Allocation> retrieveAllocations(UUID projectId, Boolean deleted);
 
-    Allocation reallocateEmployee(UUID allocationId);
+    void reallocateEmployee(UUID allocationId);
 }

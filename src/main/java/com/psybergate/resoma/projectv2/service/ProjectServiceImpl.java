@@ -1,12 +1,14 @@
 package com.psybergate.resoma.projectv2.service;
 
 
+import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.projectv2.entity.Allocation;
 import com.psybergate.resoma.projectv2.entity.Project;
 import com.psybergate.resoma.projectv2.entity.Task;
 import com.psybergate.resoma.projectv2.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,9 +26,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
 
+    private final PeopleApi peopleApi;
+
+    @Value("${server.people.domain}")
+    private String peopleServerDomain;
+
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, PeopleApi peopleApi) {
         this.projectRepository = projectRepository;
+        this.peopleApi = peopleApi;
     }
 
     @Override
@@ -86,9 +94,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public Set<Task> retrieveTasks(@Valid UUID projectId, boolean deleted) {
         Project project = projectRepository.findByIdAndDeleted(projectId, deleted);
-        Set<Task> tasks = project.getTasks().stream().filter(task -> task.isDeleted() == deleted)
+        return project.getTasks().stream().filter(task -> task.isDeleted() == deleted)
                 .collect(Collectors.toSet());
-        return tasks;
     }
 
     @Override
@@ -116,6 +123,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
         Project project = projectRepository.getOne(projectId);
+        if (!peopleApi.validateEmployee(allocation.getEmployeeId(), peopleServerDomain))
+            throw new ValidationException("Employee does not exist");
         project.addAllocation(allocation);
         project = projectRepository.save(project);
         for (Allocation tempAllocation : project.getAllocations()) {
@@ -145,19 +154,17 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public Set<Allocation> retrieveAllocations(UUID projectId, Boolean deleted) {
         Project project = projectRepository.getOne(projectId);
-        Set<Allocation> allocations = project.getAllocations().stream()
+        return project.getAllocations().stream()
                 .filter(allocation -> allocation.isDeleted() == deleted)
                 .collect(Collectors.toSet());
-        return allocations;
     }
 
     @Override
-    public Allocation reallocateEmployee(@Valid UUID allocationId) {
+    public void reallocateEmployee(@Valid UUID allocationId) {
         Project project = projectRepository.findFirstByAllocationsId(allocationId);
         checkNull(Objects.isNull(project), "Project does not exists");
         project.removeAllocation(allocationId);
         projectRepository.save(project);
-        return null;
     }
 
     private void checkNull(boolean aNull, String s) {

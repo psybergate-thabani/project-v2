@@ -49,13 +49,11 @@ public class Project extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProjectType type;
 
-    //    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private Set<Allocation> allocations = new HashSet<>();
 
-    //    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
