@@ -1,5 +1,6 @@
 package com.psybergate.resoma.project.service;
 
+import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
@@ -30,10 +31,12 @@ class ProjectServiceTest {
     private ProjectRepository projectRepository;
     private ProjectService projectService;
     private Project project;
+    @Mock
+    private PeopleApi peopleApi;
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository);
+        projectService = new ProjectServiceImpl(projectRepository, peopleApi);
         project = new Project("proj1", "First Project", "client1", LocalDate.now(), null, ProjectType.BILLABLE);
     }
 
@@ -298,6 +301,7 @@ class ProjectServiceTest {
         project.setId(UUID.randomUUID());
         when(projectRepository.getOne(project.getId())).thenReturn(project);
         when(projectRepository.save(project)).thenReturn(project);
+        when(peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083")).thenReturn(true);
 
         //Act
         Allocation resultAllocation = projectService.allocateEmployee(project.getId(), allocation);
@@ -307,7 +311,7 @@ class ProjectServiceTest {
         assertEquals(allocation, resultAllocation);
         verify(projectRepository, times(1)).getOne(project.getId());
         verify(projectRepository, times(1)).save(project);
-
+        verify(peopleApi).validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
     }
 
     @Test
