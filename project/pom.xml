@@ -72,11 +72,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
-            <groupId>com.psybergate.people</groupId>
+            <groupId>people-api</groupId>
             <artifactId>people-api</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>${basedir}\src\lib\people-api.jar</systemPath>
         </dependency>
     </dependencies>
 

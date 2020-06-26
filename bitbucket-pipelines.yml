@@ -11,7 +11,7 @@ pipelines:
     - step:
         name: Package
         script:
-          - mvn -B install dependency:go-offline # -B batch mode makes Maven less verbose
+          - mvn -B install # -B batch mode makes Maven less verbose
           - ls -R
         artifacts:
           - project/target/**
