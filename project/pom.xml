@@ -78,7 +78,7 @@
             <artifactId>people-api</artifactId>
             <scope>system</scope>
             <version>1.0</version>
-            <systemPath>${basedir}\src\lib\people-api.jar</systemPath>
+            <systemPath>${basedir}/src/lib/people-api.jar</systemPath>
         </dependency>
     </dependencies>
 
