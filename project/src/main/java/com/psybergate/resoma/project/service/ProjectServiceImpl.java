@@ -1,6 +1,6 @@
 package com.psybergate.resoma.project.service;
 
-
+import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
@@ -24,8 +24,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    private PeopleApi peopleApi;
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, PeopleApi peopleApi) {
         this.projectRepository = projectRepository;
+        this.peopleApi = peopleApi;
     }
 
     @Override
@@ -113,7 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
-        // TODO Validate employee id
+        Boolean isValid = peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+        if (!isValid) {
+            throw new ValidationException(String.format("Employee id %s is invalid", allocation.getEmployeeId()));
+        }
+
         Project project = projectRepository.getOne(projectId);
         project.addAllocation(allocation);
         project = projectRepository.save(project);
