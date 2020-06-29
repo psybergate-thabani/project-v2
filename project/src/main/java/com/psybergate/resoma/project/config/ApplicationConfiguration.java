@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    public PeopleApi peopleApi(){
+    public PeopleApi peopleApi() {
         return new PeopleApiRestImpl();
     }
 }
