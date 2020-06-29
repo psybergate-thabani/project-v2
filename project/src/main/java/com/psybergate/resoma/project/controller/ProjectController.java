@@ -7,20 +7,27 @@ import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
 import com.psybergate.resoma.project.entity.Task;
 import com.psybergate.resoma.project.service.ProjectService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/project")
 public class ProjectController {
 
     private ProjectService projectService;
+
+    @Value("${eureka.instance.instance-id}")
+    private String instanceId;
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
@@ -119,6 +126,7 @@ public class ProjectController {
 
     @GetMapping("v1/project-entries/{projectId}/validate")
     public ResponseEntity<ValidationDTO> validateProject(@PathVariable UUID projectId) {
+        log.info("Instance Id: {}", instanceId);
         return ResponseEntity.ok(projectService.validateProject(projectId));
     }
 }
