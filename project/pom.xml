@@ -65,7 +65,7 @@
         <dependency>
             <groupId>people-api</groupId>
             <artifactId>people-api</artifactId>
-            <scope>system</scope>
+            <scope>compile</scope>
             <version>1.0</version>
             <systemPath>${basedir}/src/lib/people-api.jar</systemPath>
         </dependency>
