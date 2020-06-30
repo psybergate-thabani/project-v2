@@ -1,6 +1,5 @@
 package com.psybergate.resoma.project.service;
 
-import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
