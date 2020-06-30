@@ -1,12 +1,12 @@
 package com.psybergate.resoma.project.service;
 
-import com.psybergate.people.api.PeopleApi;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
 import com.psybergate.resoma.project.entity.ProjectType;
 import com.psybergate.resoma.project.entity.Task;
 import com.psybergate.resoma.project.repository.ProjectRepository;
+import com.psybergate.resoma.project.resource.PeopleServiceClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,11 +32,12 @@ class ProjectServiceTest {
     private ProjectService projectService;
     private Project project;
     @Mock
-    private PeopleApi peopleApi;
+//    private PeopleApi peopleApi;
+    private PeopleServiceClient peopleServiceClient;
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository, peopleApi);
+        projectService = new ProjectServiceImpl(projectRepository, peopleServiceClient);
         project = new Project("proj1", "First Project", "client1", LocalDate.now(), null, ProjectType.BILLABLE);
     }
 
@@ -301,7 +302,8 @@ class ProjectServiceTest {
         project.setId(UUID.randomUUID());
         when(projectRepository.getOne(project.getId())).thenReturn(project);
         when(projectRepository.save(project)).thenReturn(project);
-        when(peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083")).thenReturn(true);
+//        when(peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083")).thenReturn(true);
+        when(peopleServiceClient.validateEmployee(allocation.getEmployeeId())).thenReturn(true);
 
         //Act
         Allocation resultAllocation = projectService.allocateEmployee(project.getId(), allocation);
@@ -311,7 +313,8 @@ class ProjectServiceTest {
         assertEquals(allocation, resultAllocation);
         verify(projectRepository, times(1)).getOne(project.getId());
         verify(projectRepository, times(1)).save(project);
-        verify(peopleApi).validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+//        verify(peopleApi).validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+        verify(peopleServiceClient).validateEmployee(allocation.getEmployeeId());
     }
 
     @Test

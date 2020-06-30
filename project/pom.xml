@@ -63,12 +63,16 @@
         </dependency>
 
         <dependency>
-            <groupId>people-api</groupId>
-            <artifactId>people-api</artifactId>
-            <scope>compile</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/src/lib/people-api.jar</systemPath>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>people-api</groupId>-->
+<!--            <artifactId>people-api</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--            <version>0.0.1</version>-->
+<!--            <systemPath>${basedir}/src/lib/people-api.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 
     <dependencyManagement>

@@ -6,6 +6,7 @@ import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
 import com.psybergate.resoma.project.entity.Task;
 import com.psybergate.resoma.project.repository.ProjectRepository;
+import com.psybergate.resoma.project.resource.PeopleServiceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
 
-    private PeopleApi peopleApi;
+//    private PeopleApi peopleApi;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, PeopleApi peopleApi) {
+    private PeopleServiceClient peopleServiceClient;
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, PeopleServiceClient peopleServiceClient) {
         this.projectRepository = projectRepository;
-        this.peopleApi = peopleApi;
+        this.peopleServiceClient = peopleServiceClient;
     }
 
     @Override
@@ -116,7 +119,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
-        Boolean isValid = peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+//        Boolean isValid = peopleServiceClient.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+        Boolean isValid = peopleServiceClient.validateEmployee(allocation.getEmployeeId());
         if (!isValid) {
             throw new ValidationException(String.format("Employee id %s is invalid", allocation.getEmployeeId()));
         }
