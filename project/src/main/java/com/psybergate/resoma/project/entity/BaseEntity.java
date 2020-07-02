@@ -28,7 +28,7 @@ public abstract class BaseEntity {
     @Column(name = "deleted")
     private boolean deleted;
 
-    @Column(name = "created")
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @Column(name = "created_by")

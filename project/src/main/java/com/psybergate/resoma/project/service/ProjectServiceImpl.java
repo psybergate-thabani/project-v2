@@ -170,14 +170,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public ValidationDTO validateTask(UUID projectId, UUID taskId) {
         Project project = projectRepository.findByIdAndDeleted(projectId, false);
-        ValidationDTO validationDTO = new ValidationDTO();
+        ValidationDTO validationDTO = new ValidationDTO(false);
+        if (project == null){
+            throw new ValidationException("Project does not exist.");
+        }
         validationDTO.setExist(project.getTask(taskId) != null);
         return validationDTO;
     }
 
     @Override
+    @Transactional
     public ValidationDTO validateProject(UUID projectId) {
-        Project project = retrieveProject(projectId, false);
+        Project project = projectRepository.findByIdAndDeleted(projectId, false);
         return new ValidationDTO(project != null);
     }
 
