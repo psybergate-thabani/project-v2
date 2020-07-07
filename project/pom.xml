@@ -62,12 +62,17 @@
         </dependency>
 
         <dependency>
-            <groupId>people-api</groupId>
+            <groupId>com.psybergate.people</groupId>
             <artifactId>people-api</artifactId>
-            <scope>system</scope>
-            <version>1.0</version>
-            <systemPath>${basedir}/src/lib/people-api.jar</systemPath>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>people-api</groupId>-->
+<!--            <artifactId>people-api</artifactId>-->
+<!--            <scope>system</scope>-->
+<!--            <version>1.0</version>-->
+<!--            <systemPath>${basedir}/src/lib/people-api.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 
     <dependencyManagement>
@@ -95,13 +100,13 @@
                     <propertyFile>${liquibase.propertyFile}</propertyFile>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <includeSystemScope>true</includeSystemScope>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
         <finalName>project</finalName>
     </build>
