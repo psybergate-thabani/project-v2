@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -20,7 +21,24 @@ import java.util.UUID;
 @Table(name = "allocation", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "employee_id"}))
 public class Allocation extends BaseEntity {
 
-    @NotNull(message = "{employee.notblank}")
-    @Column(name = "employee_id")
+    @NotNull(message = "{employeeid.notblank}")
+    @Column(name = "employee_id", nullable = false)
     private UUID employeeId;
+
+    @NotNull(message = "{startdate.notblank}")
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @NotNull(message = "{expectedenddate.notblank}")
+    @Column(name = "expected_end_date", nullable = false)
+    private LocalDate expectedEndDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    public Allocation(UUID employeeId, LocalDate startDate, LocalDate expectedEndDate){
+      this.employeeId = employeeId;
+      this.startDate = startDate;
+      this.expectedEndDate = expectedEndDate;
+    }
 }

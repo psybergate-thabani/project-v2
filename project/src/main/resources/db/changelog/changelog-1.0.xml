@@ -72,6 +72,15 @@
             <column name="employee_id" type="UUID">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="start_date" type="timestamp without time zone">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="expected_end_date" type="timestamp without time zone">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="end_date" type="timestamp without time zone">
+                <constraints nullable="true" unique="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="task">
