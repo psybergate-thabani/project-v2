@@ -237,7 +237,7 @@ class ProjectServiceTest {
     @Test
     void shouldReturnAllocation_whenAllocationIsRetrievedById() {
         //Arrange
-        Allocation allocation = new Allocation(UUID.randomUUID());
+        Allocation allocation = new Allocation(UUID.randomUUID(), LocalDate.now(), LocalDate.now());
         allocation.setId(UUID.randomUUID());
         UUID allocationId = allocation.getId();
         Project project = new Project();
