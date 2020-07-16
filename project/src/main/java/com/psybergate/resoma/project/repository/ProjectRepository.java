@@ -13,5 +13,4 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
     Project findByIdAndDeleted(UUID id, boolean deleted);
 
     List<Project> findAllByDeleted(boolean deleted);
-
 }

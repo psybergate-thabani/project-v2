@@ -113,6 +113,13 @@ public class ProjectServiceImpl implements ProjectService {
         return project.getAllocations();
     }
 
+    @Override
+    public Set<Allocation> getAllocations(UUID employeeId) {
+        List<Project> projects = projectRepository.findAll();
+        
+        return null;
+    }
+
     @Transactional
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
