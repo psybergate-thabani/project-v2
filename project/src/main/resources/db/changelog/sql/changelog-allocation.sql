@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset thabani:create_allocation_table
-CREATE TABLE allocation(
+CREATE TABLE IF NOT EXISTS allocation(
     id                  UUID PRIMARY KEY,
     version             BIGINT NOT NULL,
     deleted             BOOLEAN NOT NULL,

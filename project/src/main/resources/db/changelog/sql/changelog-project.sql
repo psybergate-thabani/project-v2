@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset thabani:create_project_table
-CREATE TABLE project(
+CREATE TABLE IF NOT EXISTS project(
     id                  UUID PRIMARY KEY,
     version             BIGINT NOT NULL,
     deleted             BOOLEAN NOT NULL,
