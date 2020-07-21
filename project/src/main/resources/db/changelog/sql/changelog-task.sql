@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset thabani:create_task_table
-CREATE TABLE task(
+CREATE TABLE IF NOT EXISTS task(
     id                  UUID PRIMARY KEY,
     version             BIGINT NOT NULL,
     deleted             BOOLEAN NOT NULL,
