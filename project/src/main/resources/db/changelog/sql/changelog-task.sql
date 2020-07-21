@@ -10,5 +10,5 @@ CREATE TABLE task(
     last_modified_date  TIMESTAMP,
     code                VARCHAR(255),
     name                VARCHAR(255) NOT NULL,
-    project_id          UUID NOT NULL;
+    project_id          UUID NOT NULL
 );

@@ -1,6 +1,6 @@
 package com.psybergate.resoma.project.service;
 
-import com.psybergate.people.api.PeopleApi;
+import com.psybergate.people.api.resource.impl.PeopleApiRestImpl;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
@@ -32,11 +32,11 @@ class ProjectServiceTest {
     private ProjectService projectService;
     private Project project;
     @Mock
-    private PeopleApi peopleApi;
+    private PeopleApiRestImpl mockPeopleApiRest;
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository, peopleApi);
+        projectService = new ProjectServiceImpl(projectRepository, mockPeopleApiRest);
         project = new Project("proj1", "First Project", "client1", LocalDate.now(), null, ProjectType.BILLABLE);
     }
 
@@ -237,7 +237,7 @@ class ProjectServiceTest {
     @Test
     void shouldReturnAllocation_whenAllocationIsRetrievedById() {
         //Arrange
-        Allocation allocation = new Allocation(UUID.randomUUID(), LocalDate.now(), LocalDate.now());
+        Allocation allocation = new Allocation(UUID.randomUUID(), UUID.randomUUID(), LocalDate.now(), LocalDate.now());
         allocation.setId(UUID.randomUUID());
         UUID allocationId = allocation.getId();
         Project project = new Project();
@@ -301,7 +301,7 @@ class ProjectServiceTest {
         project.setId(UUID.randomUUID());
         when(projectRepository.getOne(project.getId())).thenReturn(project);
         when(projectRepository.save(project)).thenReturn(project);
-        when(peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083")).thenReturn(true);
+        when(mockPeopleApiRest.validateEmployee(allocation.getEmployeeId(),"http://gateway:8080")).thenReturn(new com.psybergate.people.api.resource.dto.ValidationDTO(true));
 
         //Act
         Allocation resultAllocation = projectService.allocateEmployee(project.getId(), allocation);
@@ -311,7 +311,7 @@ class ProjectServiceTest {
         assertEquals(allocation, resultAllocation);
         verify(projectRepository, times(1)).getOne(project.getId());
         verify(projectRepository, times(1)).save(project);
-        verify(peopleApi).validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
+        verify(mockPeopleApiRest).validateEmployee(allocation.getEmployeeId(),"http://gateway:8080");
     }
 
     @Test

@@ -94,9 +94,11 @@ public class ProjectController {
 
     @PostMapping("v1/project-entries/{projectId}/allocations")
     public ResponseEntity<Allocation> allocateEmployee(@PathVariable UUID projectId, @RequestBody  AllocationDTO allocationDTO) {
+        System.out.println("Executing in method allocateEmployee");
+        System.out.println(allocationDTO);
         if (!projectId.equals(allocationDTO.getProjectId()))
             throw new ValidationException("Project id and projectId in AllocationDTO does not match.");
-        Allocation allocation = new Allocation(allocationDTO.getEmployeeId(), allocationDTO.getStartDate(), allocationDTO.getExpectedEndDate());
+        Allocation allocation = new Allocation(allocationDTO.getProjectId(),allocationDTO.getEmployeeId(), allocationDTO.getStartDate(), allocationDTO.getExpectedEndDate());
         return ResponseEntity.ok(projectService.allocateEmployee(projectId, allocation));
     }
 

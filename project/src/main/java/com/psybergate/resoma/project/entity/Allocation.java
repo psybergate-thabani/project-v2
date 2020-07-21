@@ -17,9 +17,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "Allocation")
 @Table(name = "allocation", uniqueConstraints = @UniqueConstraint(columnNames = {"project_id", "employee_id"}))
 public class Allocation extends BaseEntity {
+
+    @NotNull(message = "{projectid.notnull}")
+    @Column(name = "project_id", nullable = false)
+    private UUID projectId;
 
     @NotNull(message = "{employeeid.notblank}")
     @Column(name = "employee_id", nullable = false)
@@ -36,7 +40,8 @@ public class Allocation extends BaseEntity {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    public Allocation(UUID employeeId, LocalDate startDate, LocalDate expectedEndDate) {
+    public Allocation(UUID projectId, UUID employeeId, LocalDate startDate, LocalDate expectedEndDate) {
+        this.projectId = projectId;
         this.employeeId = employeeId;
         this.startDate = startDate;
         this.expectedEndDate = expectedEndDate;

@@ -46,4 +46,6 @@ public interface ProjectService {
     ValidationDTO validateTask(UUID projectId, UUID taskId);
 
     ValidationDTO validateProject(UUID projectId);
+
+    void updateAllocationsEndDate(UUID employeeId);
 }
