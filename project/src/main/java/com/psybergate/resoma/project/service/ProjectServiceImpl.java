@@ -1,17 +1,19 @@
 package com.psybergate.resoma.project.service;
 
-import com.psybergate.people.api.PeopleApi;
+import com.psybergate.people.api.resource.PeopleApi;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
 import com.psybergate.resoma.project.entity.Task;
 import com.psybergate.resoma.project.repository.ProjectRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -26,6 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private PeopleApi peopleApi;
 
+    @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository, PeopleApi peopleApi) {
         this.projectRepository = projectRepository;
         this.peopleApi = peopleApi;
@@ -113,11 +116,18 @@ public class ProjectServiceImpl implements ProjectService {
         return project.getAllocations();
     }
 
+    @Override
+    public Set<Allocation> getAllocations(UUID employeeId) {
+        List<Project> projects = projectRepository.findAll();
+
+        return null;
+    }
+
     @Transactional
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
-        Boolean isValid = peopleApi.validateEmployee(allocation.getEmployeeId(), "http://localhost:8083");
-        if (!isValid) {
+        com.psybergate.people.api.resource.dto.ValidationDTO validateEmployee = peopleApi.validateEmployee(allocation.getEmployeeId(), "http://gateway:8080");
+        if (!validateEmployee.getExist()) {
             throw new ValidationException(String.format("Employee id %s is invalid", allocation.getEmployeeId()));
         }
 
@@ -171,7 +181,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ValidationDTO validateTask(UUID projectId, UUID taskId) {
         Project project = projectRepository.findByIdAndDeleted(projectId, false);
         ValidationDTO validationDTO = new ValidationDTO(false);
-        if (project == null){
+        if (project == null) {
             throw new ValidationException("Project does not exist.");
         }
         validationDTO.setExist(project.getTask(taskId) != null);
@@ -183,6 +193,21 @@ public class ProjectServiceImpl implements ProjectService {
     public ValidationDTO validateProject(UUID projectId) {
         Project project = projectRepository.findByIdAndDeleted(projectId, false);
         return new ValidationDTO(project != null);
+    }
+
+    @Override
+    @Transactional
+    public void updateAllocationsEndDate(UUID employeeId) {
+        List<Project> projects = projectRepository.findByAllocationsContainingEmployeeId(employeeId);
+        if (Objects.isNull(projects)) {
+            throw new ValidationException("Cannot find projects with allocation that contains employeeId : " + employeeId);
+        }
+        projects.forEach(e -> {
+            Set<Allocation> allocations = e.getAllocations();
+            allocations.forEach(a -> {
+                a.setEndDate(LocalDate.now());
+            });
+        });
     }
 
     private void checkNull(boolean aNull, String s) {

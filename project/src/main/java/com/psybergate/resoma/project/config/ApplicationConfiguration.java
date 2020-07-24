@@ -1,7 +1,7 @@
 package com.psybergate.resoma.project.config;
 
-import com.psybergate.people.api.PeopleApi;
-import com.psybergate.people.api.impl.PeopleApiRestImpl;
+import com.psybergate.people.api.resource.PeopleApi;
+import com.psybergate.people.api.resource.impl.PeopleApiRestImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfiguration {
 
     @Bean
-    public PeopleApi peopleApi(){
+    public PeopleApi peopleApi() {
         return new PeopleApiRestImpl();
     }
 }

@@ -31,6 +31,8 @@ public interface ProjectService {
 
     Set<Allocation> retrieveAllocations(UUID projectId);
 
+    Set<Allocation> getAllocations(UUID employeeId);
+
     Allocation allocateEmployee(UUID projectId, Allocation allocation);
 
     void deallocateEmployee(UUID projectId, UUID allocationId);
@@ -44,4 +46,6 @@ public interface ProjectService {
     ValidationDTO validateTask(UUID projectId, UUID taskId);
 
     ValidationDTO validateProject(UUID projectId);
+
+    void updateAllocationsEndDate(UUID employeeId);
 }
