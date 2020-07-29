@@ -10,18 +10,21 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @Slf4j
+@Component
 public class MessageListener {
 
     private ProjectService projectService;
 
+    private ProjectMessageResource projectMessageResource;
+
     private Gson gson;
 
     @Autowired
-    public MessageListener(Gson gson, ProjectService projectService) {
+    public MessageListener(Gson gson, ProjectService projectService, ProjectMessageResource projectMessageResource) {
         this.gson = gson;
         this.projectService = projectService;
+        this.projectMessageResource = projectMessageResource;
     }
 
     @RabbitListener(queues = "${queue.people.change.name}")
@@ -30,7 +33,7 @@ public class MessageListener {
         try {
             JsonObject messageJsonObject = gson.fromJson(message, JsonObject.class);
             EventType eventType = gson.fromJson(messageJsonObject.get("eventType"), EventType.class);
-            JsonObject employeeJson = gson.fromJson(messageJsonObject.get("employee"), JsonObject.class);
+            JsonObject employeeJson = gson.fromJson(messageJsonObject.get("message"), JsonObject.class);
             UUID employeeId = gson.fromJson(employeeJson.get("id"), UUID.class);
             switch (eventType) {
                 case TERMINATED:
@@ -39,7 +42,8 @@ public class MessageListener {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ErrorMessage errorMessage = new ErrorMessage(message, e.toString());
+            projectMessageResource.broadcastErrorMessage(errorMessage);
         }
-
     }
 }
