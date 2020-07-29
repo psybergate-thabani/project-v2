@@ -33,7 +33,7 @@ public class MessageListener {
         try {
             JsonObject messageJsonObject = gson.fromJson(message, JsonObject.class);
             EventType eventType = gson.fromJson(messageJsonObject.get("eventType"), EventType.class);
-            JsonObject employeeJson = gson.fromJson(messageJsonObject.get("message"), JsonObject.class);
+            JsonObject employeeJson = gson.fromJson(messageJsonObject.get("employee"), JsonObject.class);
             UUID employeeId = gson.fromJson(employeeJson.get("id"), UUID.class);
             switch (eventType) {
                 case TERMINATED:
