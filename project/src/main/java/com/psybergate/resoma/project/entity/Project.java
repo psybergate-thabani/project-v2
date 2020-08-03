@@ -22,7 +22,8 @@ import java.util.UUID;
 @Setter
 @ToString(exclude = {"tasks", "allocations"})
 @EqualsAndHashCode(of = "code", callSuper = false)
-@Entity(name = "project")
+@Entity(name = "Project")
+@Table(name = "Project")
 @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class Project extends BaseEntity {
 
@@ -131,6 +132,14 @@ public class Project extends BaseEntity {
         for (Task task : getTasks()) {
             if (Objects.equals(taskId, task.getId()))
                 return task;
+        }
+        return null;
+    }
+
+    public Allocation getAllocationByEmployeeId(UUID employeeId) {
+        for (Allocation allocation : allocations) {
+            if (employeeId.equals(allocation.getEmployeeId()))
+                return allocation;
         }
         return null;
     }

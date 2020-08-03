@@ -1,7 +1,6 @@
 package com.psybergate.resoma.project.controller;
 
 import com.psybergate.resoma.project.dto.AllocationDTO;
-import com.psybergate.resoma.project.dto.TaskDTO;
 import com.psybergate.resoma.project.dto.ValidationDTO;
 import com.psybergate.resoma.project.entity.Allocation;
 import com.psybergate.resoma.project.entity.Project;
@@ -45,6 +44,7 @@ public class ProjectController {
 
     @GetMapping(value = "v1/project-entries", params = {"deleted"})
     public ResponseEntity<List<Project>> retrieveProjects(@RequestParam("deleted") Boolean deleted) {
+        log.info("Instance Id: {}", instanceId);
         List<Project> body = projectService.retrieveProjects(deleted);
         return ResponseEntity.ok(body);
     }
@@ -57,13 +57,13 @@ public class ProjectController {
     }
 
     @PutMapping(value = "v1/project-entries/{projectId}/tasks")
-    public ResponseEntity<Task> addTaskToTheProject(@RequestBody TaskDTO newTask,
+    public ResponseEntity<Task> addTaskToTheProject(@RequestBody @Valid Task newTask,
                                                     @PathVariable UUID projectId) {
 
         if (!projectId.equals(newTask.getProjectId()))
-            throw new ValidationException("Project id and projectId in taskDTO does not match.");
+            throw new ValidationException("Project id and projectId in task does not match.");
 
-        return ResponseEntity.ok(projectService.addTaskToProject(newTask.getTask(), projectId));
+        return ResponseEntity.ok(projectService.addTaskToProject(newTask, projectId));
     }
 
     @GetMapping(value = "v1/project-entries/{projectId}/tasks", params = {"deleted"})
@@ -100,10 +100,10 @@ public class ProjectController {
     }
 
     @PostMapping("v1/project-entries/{projectId}/allocations")
-    public ResponseEntity<Allocation> allocateEmployee(@PathVariable UUID projectId, @RequestBody AllocationDTO allocationDTO) {
+    public ResponseEntity<Allocation> allocateEmployee(@PathVariable UUID projectId, @RequestBody  AllocationDTO allocationDTO) {
         if (!projectId.equals(allocationDTO.getProjectId()))
             throw new ValidationException("Project id and projectId in AllocationDTO does not match.");
-        Allocation allocation = new Allocation(allocationDTO.getEmployeeId());
+        Allocation allocation = new Allocation(allocationDTO.getProjectId(),allocationDTO.getEmployeeId(), allocationDTO.getStartDate(), allocationDTO.getExpectedEndDate());
         return ResponseEntity.ok(projectService.allocateEmployee(projectId, allocation));
     }
 

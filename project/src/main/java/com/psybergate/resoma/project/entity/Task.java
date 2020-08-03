@@ -27,6 +27,10 @@ public class Task extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull(message = "{projectid.notblank}")
+    @Column(name = "project_id", nullable = false)
+    private UUID projectId;
+
     public Task() {
     }
 
