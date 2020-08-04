@@ -3,7 +3,13 @@ options:
 
 image: maven:3.3.9
 pipelines:
+  clone:
+    depth: full
   default:
+    - step:
+        name: Pushing changes to github
+        script:
+          - git push -u git@github.com:psybergate-thabani/time-v2.git
     - step:
         name: Clean
         script:
