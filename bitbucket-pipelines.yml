@@ -9,7 +9,7 @@ pipelines:
     - step:
         name: Pushing changes to github
         script:
-          - git push -u git@github.com:psybergate-thabani/time-v2.git
+          - git push -u git@github.com:psybergate-thabani/project-v2.git
     - step:
         name: Clean
         script:
