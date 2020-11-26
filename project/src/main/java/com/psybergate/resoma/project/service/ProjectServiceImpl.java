@@ -126,7 +126,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public Allocation allocateEmployee(UUID projectId, @Valid Allocation allocation) {
-        com.psybergate.people.api.resource.dto.ValidationDTO validateEmployee = peopleApi.validateEmployee(allocation.getEmployeeId(), "http://gateway:8080");
+        com.psybergate.people.api.resource.dto.ValidationDTO validateEmployee = peopleApi.validateEmployee(allocation
+                                                                                .getEmployeeId(), "http://gateway:8080");
+
         if (!validateEmployee.getExist()) {
             throw new ValidationException(String.format("Employee id %s is invalid", allocation.getEmployeeId()));
         }
